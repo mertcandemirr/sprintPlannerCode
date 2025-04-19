@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <script th:src="@{/js/dashboard.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/board.css}">
+    <script th:src="@{/js/board.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="container mt-5">
+
+    <div class="row">
+        <!-- TASK LIST -->
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary" onclick="loadContent('dashboard2',this)">
+                Back
+            </button>
+            <h4>Task List</h4>
+            <ul class="list-group">
+                <li id="taskItem" th:each="task : ${tasks}"
+                    class="list-group-item list-group-item-action"
+                    onclick="openTaskDetails(this)"
+                    th:data-task-id="${task.ID}"
+                    th:data-task-name="${task.name}"
+                    th:data-task-status="${task.status}"
+                    th:data-task-developer="${task.developer.username}"
+                    th:data-task-analyst="${task.analyst.username}"
+                    th:data-task-due-date="${task.dueDate}"
+                    th:data-task-final-s-p="${task.finalSP}"
+                    th:data-task-event="${task.event.eventName}"
+                    th:data-task-is-starred="${task.starred}"
+                    th:data-task-event-lead="${task.event.lead.username}">
+
+                    <span th:text="${task.event.eventName + '/'}"></span>
+                    <span th:text="${task.name}"></span>
+
+                    <span class="badge bg-dark"
+                          th:if="${task.developer.onTrackedTask == task && task.developer.username == user.username}">On Track Dev</span>
+                    <span class="badge bg-dark"
+                          th:if="${task.analyst.onTrackedTask == task && task.analyst.username == user.username}">On Track Analyst</span>
+                    <span class="badge bg-dark"
+                          th:if="${task.developer.onTrackedTask != task && task.developer.username == user.username}">Dev</span>
+                    <span class="badge bg-dark"
+                          th:if="${task.analyst.onTrackedTask != task && task.analyst.username == user.username}">Analyst</span>
+                    <span class="badge bg-dark" th:if="${task.event.lead.username == user.username}">Lead</span>
+
+                    <div class="ml-auto">
+                        <span class="badge bg-danger" th:onclick="'deleteTask(\'' + ${task.ID} + '\')'" style="cursor: pointer;">Delete</span>
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+
+        <!-- TASK DETAİLS -->
+        <div class="col-md-8">
+            <div id="taskDetailsContainer">
+                <div class="d-flex justify-content-end align-items-center">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#createTaskModal">
+                        Create Task
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="tasks/">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-title">Task Details</h5>
+                                <input type="checkbox" class="form-check-input" id="taskIsStarred" value=""
+                                       hidden="hidden">
+                                <label class="form-check-label" for="taskIsStarred" id="heartLabel">&#x2665;</label>
+
+                            </div>
+                            <button type="button" class="btn" id="onTrackButton"
+                                    onclick="trackTask(this)"
+                                    th:data-user-id="${user.id}">
+                                <span id="onTrackIcon">&#10004;</span> Track this task
+                            </button>
+                            <div class="mb-3">
+                                <label for="taskId" class="form-label">ID</label>
+                                <input type="text" class="form-control" id="taskId" value="" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="taskName" value="" required
+                                       th:readonly="${not isAdmin}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskStatus" class="form-label">Status</label>
+                                <select class="form-select" id="taskStatus" th:disabled="${not isAdmin}">
+                                    <option value="todo">Todo</option>
+                                    <option value="done">Done</option>
+                                    <option value="overdue">Overdue</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskDeveloper" class="form-label">Developer</label>
+                                <select class="form-select" id="taskDeveloper" th:field="*{user}"
+                                        th:disabled="${not isAdmin}">
+                                    <option th:each="user: ${allUsers}" th:text="${user.username}"
+                                            th:value="${user.username}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskAnalyst" class="form-label">Analyst</label>
+                                <select class="form-select" id="taskAnalyst" th:disabled="${not isAdmin}">
+                                    <option th:each="user: ${allUsers}" th:text="${user.username}"
+                                            th:value="${user.username}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskDueDate" class="form-label">Due Date</label>
+                                <input type="text" class="form-control" id="taskDueDate" value=""
+                                       th:readonly="${not isAdmin}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskFinalSp" class="form-label">Final SP</label>
+                                <input type="number" class="form-control" id="taskFinalSp" value=""
+                                       th:readonly="${not isAdmin}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="taskEvent" class="form-label">Event</label>
+                                <select class="form-select" id="taskEvent" th:disabled="${not isAdmin}">
+                                    <option th:each="event: ${allEvents}" th:text="${event.eventName}"
+                                            th:value="${event.eventName}"></option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="saveTaskDetails()">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel">Create Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/tasks">
+                    <div class="mb-3">
+                        <label for="newTaskName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="newTaskName" value="" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newTaskStatus" class="form-label">Status</label>
+                        <select class="form-select" id="newTaskStatus">
+                            <option value="todo">Todo</option>
+                            <option value="done">Done</option>
+                            <option value="overdue">Overdue</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newTaskDeveloper" class="form-label">Developer</label>
+                        <select class="form-select" id="newTaskDeveloper" th:field="*{user}">
+                            <option th:each="user: ${allUsers}" th:text="${user.username}"
+                                    th:value="${user.username}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newTaskAnalyst" class="form-label">Analyst</label>
+                        <select class="form-select" id="newTaskAnalyst">
+                            <option th:each="user: ${allUsers}" th:text="${user.username}"
+                                    th:value="${user.username}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newTaskDueDate" class="form-label">Due Date</label>
+                        <input type="text" class="form-control" id="newTaskDueDate" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newTaskFinalSp" class="form-label">Final SP</label>
+                        <input type="number" class="form-control" id="newTaskFinalSp" value="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="newTaskEvent" class="form-label">Event</label>
+                        <select class="form-select" id="newTaskEvent">
+                            <option th:each="event: ${allEvents}" th:text="${event.eventName}"
+                                    th:value="${event.eventName}"></option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="createTask()">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

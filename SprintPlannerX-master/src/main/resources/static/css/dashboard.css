@@ -1,0 +1,131 @@
+#secondary_navbar .active {
+    text-decoration: underline;
+}
+
+#sidebar {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0.79);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+
+#sidebar .nav-link {
+    color: lightgray;
+}
+
+#sidebar .nav-link.active {
+    color: white;
+    background-color: #932828;
+    text-decoration: underline;
+}
+
+#sidebar .nav-link:hover {
+    color: white;
+}
+
+#sidebar .nav-item {
+    width: 200px;
+}
+
+
+#sidebarBottom .nav-link {
+    color: lightgray;
+}
+
+#sidebarBottom .nav-link.active {
+    color: white;
+    background-color: gray;
+    text-decoration: underline;
+}
+
+#sidebarBottom .nav-link:hover {
+    color: white;
+}
+
+#onTrackedTaskName {
+    text-decoration: underline;
+}
+
+.favoriteListItem {
+    color: #d1d3e2;
+}
+
+.favoriteListItem a:hover {
+    color: #932828;
+}
+
+#a:hover {
+    color: #932828;
+}
+
+.card {
+    margin: 20px;
+}
+
+.card-text {
+    margin-top: 10px;
+}
+
+.card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.16), 0 4px 10px rgba(0, 0, 0, 0.23);
+}
+
+#logo {
+    --bs-gutter-x: 1.5rem;
+    margin-left: calc(var(--bs-gutter-x) * -.5);
+}
+
+.selected-task {
+    background-color: rgba(206, 206, 206, 0.75);
+}
+
+#taskItem:hover {
+    background-color: rgb(206, 206, 206);
+}
+
+.back-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+
+.back-arrow {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+#heartLabel {
+    color: gray;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+#taskIsStarred:checked + #heartLabel {
+    color: red;
+}
+
+#taskIsStarred {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <script th:src="@{/js/dashboard.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/board.css}">
+    <script th:src="@{/js/board.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <button class="back-button" onclick="goBack()">
+        <span class="back-arrow">&#8592;</span> Back
+    </button>
+    <h4>Project Details</h4>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${event.eventName}"></h5>
+            <p class="card-text">
+                <strong>Start Date:</strong> <span th:text="${event.startDate}"></span><br>
+                <strong>End Date:</strong> <span th:text="${event.endDate}"></span>
+            </p>
+            <h6 class="card-subtitle mb-2 text-muted">Lead:</h6>
+            <p class="card-text">
+                <strong>Name:</strong> <span th:text="${event.lead.name}"></span><br>
+                <strong>Username:</strong> <span th:text="${event.lead.name}"></span><br>
+                <strong>Email:</strong> <span th:text="${event.lead.email}"></span>
+            </p>
+            <br>
+            <h6 class="card-subtitle mb-2 text-muted">Tasks:</h6>
+            <ul class="list-group">
+                <li th:each="task : ${event.tasks}" class="list-group-item">
+                    <strong>ID:</strong> <span th:text="${task.ID}"></span><br>
+                    <strong>Name:</strong> <span th:text="${task.name}"></span><br>
+                    <strong>Developer:</strong> <span th:text="${task.developer.name}"></span><br>
+                    <strong>Analyst:</strong> <span th:text="${task.analyst.name}"></span><br>
+                    <strong>Story Point:</strong> <span th:text="${task.finalSP}"></span><br>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <script th:src="@{/js/dashboard.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/board.css}">
+    <script th:src="@{/js/board.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+            crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<button class="back-button" onclick="goBack()">
+    <span class="back-arrow">&#8592;</span> Back
+</button>
+<div class="container mt-5">
+    <h1 class="text-center">Profile</h1>
+    <div class="row mt-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Your Information</h5>
+                    <p class="card-text">
+                        <strong>ID:</strong> <span th:text="${currentUser.id}" id="idValue"></span><br>
+
+                        <strong>Username:</strong> <span th:text="${currentUser.username}" id="usernameValue"></span>
+
+                        <br>
+
+                        <strong>Name:</strong> <span th:text="${currentUser.name}"></span>
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#changeNameModal">Change
+                        </button>
+                        <br>
+
+                        <strong>Email:</strong> <span th:text="${currentUser.email}"></span>
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                data-bs-target="#changeEmailModal">Change
+                        </button>
+                        <br>
+                        <br>
+                    </p>
+                    <h6 class="card-subtitle mb-2 text-muted">Your Tasks:</h6>
+                    <ul class="list-group">
+                        <li th:each="task : ${UserTasks}" class="list-group-item">
+                            <strong>ID:</strong> <span th:text="${task.ID}"></span><br>
+                            <strong>Name:</strong> <span th:text="${task.name}"></span><br>
+                            <strong>Developer:</strong> <span th:text="${task.developer.username}"></span><br>
+                            <strong>Analyst:</strong> <span th:text="${task.analyst.username}"></span><br>
+                            <strong>Story Point:</strong> <span th:text="${task.finalSP}"></span><br>
+                            <strong>Event:</strong> <span th:text="${task.event.eventName}"></span><br>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Username Modal -->
+<div class="modal fade" id="changeNameModal" tabindex="-1" aria-labelledby="ModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel1">Change Name</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changeNameForm">
+                    <div class="mb-3">
+                        <label for="userId"></label>
+                        <input type="number" class="form-control" id="userId" th:value="${currentUser.id}"
+                               hidden="hidden">
+                        <label for="newName" class="form-label">New Name</label>
+                        <input type="text" class="form-control" id="newName" th:value="${currentUser.name}">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="saveName()">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Change Email Modal -->
+<div class="modal fade" id="changeEmailModal" tabindex="-1" aria-labelledby="ModalLabel2" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalLabel2">Change Username</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changeEmailForm">
+                    <div class="mb-3">
+                        <label for="userId2"></label>
+                        <input type="number" class="form-control" id="userId2" th:value="${currentUser.id}"
+                               hidden="hidden">
+                        <label for="newEmail" class="form-label">New Email</label>
+                        <input type="text" class="form-control" id="newEmail" th:value="${currentUser.email}">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="saveEmail()">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function saveName() {
+
+        var newName = document.getElementById("newName").value.toString();
+        var userId = document.getElementById("userId").value;
+
+
+        fetch('/user/updateName/' + userId, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: newName,
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Username saved successfully!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred while saving Username.');
+            });
+    }
+
+    function saveEmail() {
+
+        var newEmail = document.getElementById("newEmail").value.toString();
+        var userId = document.getElementById("userId").value;
+
+
+        fetch('/user/updateEmail/' + userId, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: newEmail,
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Username saved successfully!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred while saving Username.');
+            });
+    }
+</script>
+
+</body>
+</html>

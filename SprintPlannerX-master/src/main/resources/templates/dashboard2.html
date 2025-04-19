@@ -1,0 +1,76 @@
+<div class="row">
+    <!-- 4 Card -->
+    <div class="col-md-3 mb-4">
+        <div class="card h-100">
+            <div class="card-body" style="text-align: center;">
+                <h5 class="card-title">Uncompleted Tasks</h5>
+                <p class="card-text">
+                    <span id="toDoTaskCount" th:text="${toDoTaskCount}" style="font-size: xx-large"></span>
+                    <a href="#" onclick="loadContent('tasks/userTasksStatus?status=todo',this)"
+                       class="stretched-link"></a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card h-100">
+            <div class="card-body" style="text-align: center;">
+                <h5 class="card-title">Completed Tasks</h5>
+                <p class="card-text">
+                    <span id="doneTaskCount" th:text="${doneTaskCount}" style="font-size: xx-large"></span>
+                    <a href="#" onclick="loadContent('tasks/userTasksStatus?status=done',this)"
+                       class="stretched-link"></a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card h-100">
+            <div class="card-body" style="text-align: center;">
+                <h5 class="card-title">Overdue Tasks</h5>
+                <p class="card-text">
+                    <span id="overdueTaskCount" th:text="${overdueTaskCount}" style="font-size: xx-large"></span>
+                    <a href="#" onclick="loadContent('tasks/userTasksStatus?status=overdue',this)"
+                       class="stretched-link"></a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card h-100">
+            <div class="card-body" style="text-align: center;">
+                <h5 class="card-title">Total Tasks</h5>
+                <p class="card-text">
+                    <span id="totalTaskCount" th:text="${totalTaskCount}" style="font-size: xx-large"></span>
+                    <a href="#" onclick="loadContent('tasks/userTasks?favorite=',this)" class="stretched-link"></a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2 Card -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Upcoming Tasks</h5>
+                <p class="card-text">Earliest Deadline First</p>
+                <ul>
+                    <li th:each="task : ${upcomingTasks}">
+                        <span th:text="${task.name}"></span> - <span th:text="${task.dueDate}"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Performance</h5>
+                DoneTask/TotalTask:
+                <p class="card-text" th:text="${performanceCount}">
+
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+.task-list {
+    list-style-type: none;
+    min-height: 200px;
+    border: 2px solid #d1d3e2;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.task {
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #3f3f3f;
+    border: 1px solid #545454;
+    cursor: grab;
+    border-radius: 5px;
+    color: #ffffff;
+    transition: background-color 1s ease-in-out;
+}
+
+.task.dragging {
+    background-color: #3f3f3f;
+    color: #ffffff;
+    border-color: #545454;
+    opacity: 0.8;
+}
+
+.dragging {
+    opacity: 1;
+    width: 100%;
+}
+
+.task-list.drag-over {
+    border: 2px dashed #495057;
+}
+
+.back-button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.back-arrow {
+    display: inline-block;
+    margin-right: 5px;
+}
